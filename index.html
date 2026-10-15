@@ -209,7 +209,12 @@ body.boost .s-head{animation-duration:.8s}body.boost .s-drill{animation-duration
 .piece{padding:1.2rem 1.2rem 1.4rem;text-align:left;transition:box-shadow .3s,transform .4s var(--ease),opacity .4s;display:block;width:100%}
 .piece:hover,.piece:focus-visible{box-shadow:var(--neu-in)}
 .piece.hide{display:none}
-.piece svg{width:100%;height:auto;aspect-ratio:1;display:block;margin-bottom:.6rem}
+.piece svg{width:100%;height:auto;aspect-ratio:4/5;display:block;margin-bottom:.8rem;padding:14%;background:#1a1918;border-radius:14px}
+.ph{aspect-ratio:4/5;border-radius:14px;overflow:hidden;background:#1a1918;box-shadow:var(--neu-in);margin-bottom:.8rem}
+.ph img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .7s var(--ease)}
+.piece:hover .ph img,.piece:focus-visible .ph img{transform:scale(1.05)}
+.nph{position:absolute;right:1.5rem;top:1.5rem;font:500 .58rem var(--mono);letter-spacing:.12em;color:var(--crema);background:rgba(20,19,18,.6);padding:.2rem .5rem;border-radius:99px}
+.piece{position:relative}
 .gsv *{fill:none;stroke:var(--crema);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 .gsv .oc{stroke:var(--ocre)} .gsv .bl{fill:rgba(237,230,214,.18)}
 .gsv .gt2{fill:var(--ocre);stroke:none;font:600 20px var(--mono);text-anchor:middle}
@@ -221,8 +226,14 @@ body.boost .s-head{animation-duration:.8s}body.boost .s-drill{animation-duration
 .modal.open{display:grid}
 .mbox{width:min(880px,100%);max-height:92vh;overflow:auto;padding:1.6rem;display:grid;grid-template-columns:1fr 1fr;gap:1.6rem;animation:pop .5s var(--ease)}
 @keyframes pop{from{opacity:0;transform:scale(.94) translateY(14px)}}
-.mview{perspective:700px;display:grid;place-items:center;aspect-ratio:1;border-radius:14px;background:rgba(0,0,0,.25);box-shadow:inset 0 0 40px #0006;overflow:hidden}
-.mview svg{width:78%;transform-style:preserve-3d;animation:spin3 9s linear infinite}
+.mview{perspective:700px;display:grid;place-items:center;aspect-ratio:4/5;border-radius:14px;background:rgba(0,0,0,.25);box-shadow:inset 0 0 40px #0006;overflow:hidden}
+.mview svg{width:78%;transform-style:preserve-3d;animation:spin3 9s linear infinite;display:none}
+.mview img{width:100%;height:100%;object-fit:contain;display:block}
+.mview.plan svg{display:block}.mview.plan img{display:none}
+.thumbs{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.th{width:54px;height:54px;border-radius:10px;overflow:hidden;background:var(--neu-bg);box-shadow:var(--neu-s);font:600 .54rem var(--mono);letter-spacing:.08em;color:var(--ocre-l);display:grid;place-items:center;padding:0}
+.th img{width:100%;height:100%;object-fit:cover;display:block}
+.th.on{box-shadow:var(--neu-in);outline:2px solid var(--ocre)}
 .mview.stop svg{animation-play-state:paused}
 @keyframes spin3{from{transform:rotateY(-30deg)}50%{transform:rotateY(30deg)}to{transform:rotateY(-30deg)}}
 .mview .pb{transition:transform .8s var(--ease)}
@@ -580,7 +591,7 @@ body.boost .dot{animation-duration:.4s}
     </div>
     <div class="case neu rv" style="--d:.2s">
       <h4>Caso · Aliens</h4>
-      <svg viewBox="0 0 100 100" class="gsv" aria-hidden="true" id="aliencase"></svg>
+      <div class="ph" style="max-width:240px;margin:0 auto 1rem"><img src="img/aliens-1.webp" alt="Aliens verdes impresos en 3D, pedido para un local comercial" loading="lazy" decoding="async"></div>
       <p style="color:#cfc8b8;font-size:.92rem">Pedido especial para un local comercial. Una idea, un plano, una pieza que el local no encontraba en ningún catálogo.</p>
     </div>
   </div>
@@ -866,27 +877,37 @@ const PIECES=[
  ["EA-016","Número calado","Número decorativo de líneas onduladas para mesas y sesiones de foto.",["Eventos","Luz"],"PLA / MDF","Corte láser / 3D","número · altura · color",
   [`<text class="gl" x="50" y="82" style="font-size:78px">7</text><path d="M34 30q4-4 8 0t8 0t8 0t8 0M34 40q4-4 8 0t8 0t8 0t8 0"/>`]],
  ["EA-017","Silbato llavero","Souvenir personalizado: color, nombre y medida.",["Eventos","Marcas"],"PLA","Impresión 3D","color · nombre · medida",
-  [`<rect x="18" y="42" width="56" height="26" rx="12"/><path d="M58 42V30H74V42"/><circle class="oc" cx="34" cy="55" r="4"/><circle cx="82" cy="28" r="8"/><path d="M74 34L68 40"/>`]]];
+  [`<rect x="18" y="42" width="56" height="26" rx="12"/><path d="M58 42V30H74V42"/><circle class="oc" cx="34" cy="55" r="4"/><circle cx="82" cy="28" r="8"/><path d="M74 34L68 40"/>`]],
+ ["EA-018","Manos inquietas","Estrella espiral y cubo infinito: piezas articuladas para tener en la mano.",["Juego"],"PLA","Impresión 3D articulada","color · tamaño",
+  [`<path d="M50 18L58 42L82 50L58 58L50 82L42 58L18 50L42 42Z"/><circle class="oc" cx="50" cy="50" r="7"/>`]]];
+const PH={articulados:1,equilibrio:1,posavasos:2,aliens:1,halloween:2,jirafa:1,colectivo:1,autito:3,numeros:3,maceta2:1,acanalada:1,espiral:1,portalapices:2,corazon:4,nina:7,numcalado:3,silbato:4,manos:1};
+const SLUG=["articulados","equilibrio","posavasos","aliens","halloween","jirafa","colectivo","autito","numeros","maceta2","acanalada","espiral","portalapices","corazon","nina","numcalado","silbato","manos"];
+const img=(i,k)=>`img/${SLUG[i]}-${k}.webp`;
 const CATS=["Todo","Hogar","Juego","Eventos","Marcas","Luz"];
 const mkSvg=(p,ex)=>`<svg viewBox="0 0 100 100" class="gsv" aria-hidden="true">${p[0]?`<g class="pb ${ex?'p-ex-a':''}">${p[0]}</g>`:""}${p[1]?`<g class="pb ${ex?'p-ex-b':''}">${p[1]}</g>`:""}</svg>`;
-$("#pieces").innerHTML=PIECES.map((p,i)=>`<button class="piece neu rv" data-i="${i}" style="--d:${(i%6)*.06}s" data-cat="${p[3].join(" ")}"><div class="machine">${mkSvg(p[7],false)}</div><span class="code">${p[0]}</span><h3>${p[1]}</h3><p>${p[2]}</p></button>`).join("");
-$("#aliencase").innerHTML=PIECES[3][7][0];
+$("#pieces").innerHTML=PIECES.map((p,i)=>`<button class="piece neu rv" data-i="${i}" style="--d:${(i%6)*.06}s" data-cat="${p[3].join(" ")}"><div class="ph machine"><img src="${img(i,1)}" alt="${p[1]}: ${p[2]}" loading="lazy" decoding="async" data-i="${i}"></div>${PH[SLUG[i]]>1?`<span class="nph">${PH[SLUG[i]]} fotos</span>`:""}<span class="code">${p[0]}</span><h3>${p[1]}</h3><p>${p[2]}</p></button>`).join("");
+$("#pieces").addEventListener("error",e=>{const t=e.target;if(t.tagName!=="IMG")return;const w=t.closest(".ph");if(w){w.outerHTML=mkSvg(PIECES[+t.dataset.i][7],false)}},true);
 $("#filters").innerHTML=CATS.map((c,i)=>`<button class="btn ${i?"":"on"}" data-c="${c}" aria-pressed="${!i}">${c}</button>`).join("");
 $("#filters").addEventListener("click",e=>{const b=e.target.closest("[data-c]");if(!b)return;
   $$("#filters .btn").forEach(x=>{x.classList.toggle("on",x===b);x.setAttribute("aria-pressed",x===b)});
   $$(".piece").forEach(p=>p.classList.toggle("hide",b.dataset.c!=="Todo"&&!p.dataset.cat.split(" ").includes(b.dataset.c)))});
 const modal=$("#modal"),mbox=$("#mbox");let lastFocus;
-function openPiece(i){const p=PIECES[i],ex=!!p[8];lastFocus=document.activeElement;
+function openPiece(i){const p=PIECES[i],ex=!!p[8],n=PH[SLUG[i]];lastFocus=document.activeElement;
   mbox.innerHTML=`<button class="btn mx" id="mclose" aria-label="Cerrar">Cerrar ✕</button>
-  <div><div class="mview machine" id="mview">${mkSvg(p[7],ex)}</div></div>
+  <div><div class="mview machine" id="mview"><img id="mimg" src="${img(i,1)}" alt="${p[1]}">${mkSvg(p[7],ex)}</div>
+  <div class="thumbs" role="group" aria-label="Fotos y plano">${Array.from({length:n},(_,k)=>`<button class="th ${k?"":"on"}" data-k="${k+1}" aria-label="Foto ${k+1}"><img src="${img(i,k+1)}" alt=""></button>`).join("")}<button class="th" data-k="plan" aria-label="Ver plano lineal">PLANO</button></div></div>
   <div><span class="eyebrow">${p[0]}</span><h3 id="mt">${p[1]}</h3><p style="color:#cfc8b8">${p[2]}</p>
   <dl class="spec"><dt>Material</dt><dd>${p[4]}</dd><dt>Proceso</dt><dd>${p[5]}</dd><dt>Categoría</dt><dd>${p[3].join(" · ")}</dd></dl>
   <div class="vars">${p[6].split(" · ").map(v=>`<span>${v}</span>`).join("")}</div>
   <div style="display:flex;gap:.8rem;flex-wrap:wrap">${ex?`<button class="btn" id="mex" aria-pressed="false">Vista explosionada</button>`:""}<button class="btn" id="mrot">Pausar giro</button><a class="btn pri" href="#contacto" id="mask">Pedir esta pieza</a></div></div>`;
   modal.classList.add("open");document.body.style.overflow="hidden";$("#mclose").focus();
   $("#mclose").onclick=closeM;$("#mask").onclick=()=>{closeM();$("select[name=t]").selectedIndex=0;$("textarea[name=m]").value=`Me interesa: ${p[1]} (${p[0]}).`};
-  const mv=$("#mview");$("#mrot").onclick=e=>{const s=mv.classList.toggle("stop");e.target.textContent=s?"Girar":"Pausar giro"};
-  if(ex)$("#mex").onclick=e=>{const o=mv.classList.toggle("ex");e.target.setAttribute("aria-pressed",o)}}
+  const mv=$("#mview"),mi=$("#mimg");
+  mi.onerror=()=>{mv.classList.add("plan");$$(".th",mbox).forEach(t=>t.classList.toggle("on",t.dataset.k==="plan"))};
+  const show=k=>{mv.classList.toggle("plan",k==="plan");if(k!=="plan")mi.src=img(i,k);$$(".th",mbox).forEach(t=>t.classList.toggle("on",t.dataset.k===String(k)))};
+  $(".thumbs",mbox).addEventListener("click",e=>{const t=e.target.closest(".th");t&&show(t.dataset.k)});
+  $("#mrot").onclick=e=>{show("plan");const s=mv.classList.toggle("stop");e.target.textContent=s?"Girar":"Pausar giro"};
+  if(ex)$("#mex").onclick=e=>{show("plan");const o=mv.classList.toggle("ex");e.target.setAttribute("aria-pressed",o)}}
 function closeM(){modal.classList.remove("open");document.body.style.overflow="";lastFocus&&lastFocus.focus()}
 $("#pieces").addEventListener("click",e=>{const b=e.target.closest(".piece");b&&openPiece(+b.dataset.i)});
 modal.addEventListener("click",e=>{if(e.target===modal)closeM()});
