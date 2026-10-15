@@ -31,7 +31,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;overflow-x:clip;-webkit-text-size-adjust:100%}
 body{background:var(--grafito);color:var(--crema);font:400 16px/1.6 var(--sans);overflow-x:clip;min-height:100vh}
-body.hascur,body.hascur a,body.hascur button,body.hascur [role=button]{cursor:none}
+body.hascur,body.hascur a,body.hascur button,body.hascur [role=button],body.hascur .card,body.hascur .piece{cursor:none}
 body.hascur input,body.hascur textarea,body.hascur select{cursor:text}
 a{color:inherit;text-decoration:none}
 button{font:inherit;color:inherit;background:none;border:0}
@@ -198,11 +198,17 @@ body.boost .s-head{animation-duration:.8s}body.boost .s-drill{animation-duration
 .card .n{font:500 .66rem/1.6rem var(--mono);letter-spacing:.24em;color:var(--ocre)}
 .card h3{font-size:1.3rem;letter-spacing:.03em;text-transform:uppercase;margin:.6rem 0 .5rem}
 .card p{color:#cfc8b8;font-size:.92rem}
-.card .more{display:grid;grid-template-rows:0fr;transition:grid-template-rows .5s var(--ease)}
-.card .more>div{overflow:hidden}
+.card .more{display:grid;grid-template-rows:1fr}
+.card .more>div{overflow:hidden;opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity .4s,transform .4s var(--ease),visibility .4s}
+.more-btn{align-self:flex-start;margin-top:.9rem;font:500 .66rem var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--ocre)}
+.more-btn i{display:inline-block;font-style:normal;margin-right:.5em;transition:transform .3s var(--ease)}
+.card.open .more-btn i{transform:rotate(45deg)}
 .card .more p{margin-top:.9rem;padding-top:.9rem;border-top:1px solid rgba(237,230,214,.1);color:var(--piedra-t);font-size:.84rem}
-.card:hover,.card:focus-visible,.card.open{box-shadow:var(--neu-in);transform:translateY(1px)}
-.card:hover .more,.card:focus-visible .more,.card.open .more{grid-template-rows:1fr}
+.card.open,.card:has(.more-btn:focus-visible){box-shadow:var(--neu-in);transform:translateY(1px)}
+.card.open .more>div{opacity:1;visibility:visible;transform:none}
+@media(hover:hover){.card:hover{box-shadow:var(--neu-in);transform:translateY(1px)}.card:hover .more>div{opacity:1;visibility:visible;transform:none}}
+@media(hover:none){.card .more{grid-template-rows:0fr;transition:grid-template-rows .5s var(--ease)}.card.open .more{grid-template-rows:1fr}}
+.card,.piece{cursor:pointer}
 .card .ic{position:absolute;right:1.4rem;top:1.4rem;width:34px;height:34px;opacity:.85}
 .card .ic *{fill:none;stroke:var(--ocre);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 
@@ -230,14 +236,17 @@ body.boost .s-head{animation-duration:.8s}body.boost .s-drill{animation-duration
 
 /* ===== COLECCIÓN ===== */
 .filters{display:flex;gap:.9rem;flex-wrap:wrap;margin:2rem 0 2.4rem}
+.filters .btn[aria-pressed=true]{color:var(--ocre-l);box-shadow:var(--neu-in),inset 0 0 0 1px var(--ocre)}
 .pgridc{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:24px}
 .piece{padding:1.2rem 1.2rem 1.4rem;text-align:left;transition:box-shadow .3s,transform .4s var(--ease),opacity .4s;display:flex;flex-direction:column;justify-content:flex-start;width:100%}
-.piece:hover,.piece:focus-visible{box-shadow:var(--neu-in)}
+.piece:hover,.piece:has(.open-p:focus-visible){box-shadow:var(--neu-in)}
+.open-p{text-align:inherit;text-transform:inherit;letter-spacing:inherit}
 .piece.hide{display:none}
 .piece svg{width:100%;height:auto;aspect-ratio:4/5;display:block;margin-bottom:.8rem;padding:14%;background:#1a1918;border-radius:14px}
 .ph{aspect-ratio:4/5;border-radius:14px;overflow:hidden;background:#1a1918;box-shadow:var(--neu-in);margin-bottom:.8rem}
 .ph img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .7s var(--ease)}
-.piece:hover .ph img,.piece:focus-visible .ph img{transform:scale(1.05)}
+.ph img.cb{object-position:50% 100%}
+.piece:hover .ph img,.piece:has(.open-p:focus-visible) .ph img{transform:scale(1.05)}
 .nph{position:absolute;right:1.5rem;top:1.5rem;font:500 .58rem var(--mono);letter-spacing:.12em;color:var(--crema);background:rgba(20,19,18,.6);padding:.2rem .5rem;border-radius:99px}
 .piece{position:relative}
 .gsv *{fill:none;stroke:var(--crema);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
@@ -261,6 +270,7 @@ body.boost .s-head{animation-duration:.8s}body.boost .s-drill{animation-duration
 .th img{width:100%;height:100%;object-fit:cover;display:block}
 .th.on{box-shadow:var(--neu-in);outline:2px solid var(--ocre)}
 .mview.stop svg{animation-play-state:paused}
+.btn[hidden]{display:none}
 @keyframes spin3{from{transform:rotateY(-30deg)}50%{transform:rotateY(30deg)}to{transform:rotateY(-30deg)}}
 .mview .pb{transition:transform .8s var(--ease)}
 .mview.ex .p-ex-a{transform:translateY(-16px)} .mview.ex .p-ex-b{transform:translateY(16px)}
@@ -269,8 +279,9 @@ body.boost .s-head{animation-duration:.8s}body.boost .s-drill{animation-duration
 .spec dt{color:#cfc8b8;text-transform:uppercase;letter-spacing:.14em;font-size:.62rem;padding-top:.15rem}
 .vars{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.2rem}
 .vars span{padding:.3rem .8rem;border-radius:99px;border:1px solid rgba(237,230,214,.25);font:500 .64rem var(--mono);letter-spacing:.1em;text-transform:uppercase}
-.mx{position:absolute;right:16px;top:14px}
-@media(max-width:700px){.mbox{grid-template-columns:1fr}}
+.mx{position:absolute;right:16px;top:14px;z-index:5}
+@media(min-width:701px){.mbox>div+div{padding-top:2.8rem}}
+@media(max-width:700px){.mbox{display:block;padding:1rem 1.1rem 1.4rem;max-height:90svh;overscroll-behavior:contain}.mx{position:sticky;top:0;display:flex;width:max-content;margin:0 0 .8rem auto}.mbox>div+div{margin-top:1.2rem}}
 
 /* ===== ESCALA ===== */
 .escala{padding:0;height:200vh}
@@ -538,7 +549,7 @@ body.boost .dot{animation-duration:.4s}
     <p class="eyebrow rv">Para marcas y empresas</p>
     <h2 class="title rv">Tu producto, gestionado de punta a punta.</h2>
     <p class="lead rv">Escuchamos y, desde el minuto siguiente, hay cronograma, hitos, proveedores, costos y control. Somos el puente entre la idea y la fábrica.</p>
-    <div class="pm glass rv" style="--d:.15s" aria-label="Tablero ilustrativo de gestión de proyecto">
+    <div class="pm glass rv" style="--d:.15s" role="group" aria-label="Tablero ilustrativo de gestión de proyecto">
       <div>
         <h3>Cronograma · Proyecto EA-024</h3>
         <div class="grow">Relevamiento<div class="track"><i style="--s:0%;--w:14%;--d:.1s"></i></div></div>
@@ -570,6 +581,7 @@ body.boost .dot{animation-duration:.4s}
     <p class="eyebrow rv">Objetos con algo distinto</p>
     <h2 class="title rv">Colección</h2>
     <div class="filters rv" id="filters" role="group" aria-label="Filtrar por categoría"></div>
+    <p class="note rv" id="fcount" role="status" aria-live="polite" style="margin:-1.4rem 0 1.6rem"></p>
     <div class="pgridc" id="pieces"></div>
   </div>
 </section>
@@ -629,9 +641,9 @@ body.boost .dot{animation-duration:.4s}
       <p class="rv" style="margin-top:2rem"><a class="btn pri" href="#contacto">Hablemos de tu marca</a></p>
     </div>
     <div class="case neu rv" style="--d:.2s">
-      <h3>Caso · Aliens</h3>
-      <div class="ph" style="max-width:240px;margin:0 auto 1rem"><img src="img/aliens-1.webp" alt="Aliens verdes impresos en 3D, pedido para un local comercial" loading="lazy" decoding="async"></div>
-      <p style="color:#cfc8b8;font-size:.92rem">Pedido especial para un local comercial. Una idea, un plano, una pieza que el local no encontraba en ningún catálogo.</p>
+      <h3>Caso · Extraterrestres</h3>
+      <div class="ph" style="max-width:240px;margin:0 auto 1rem"><img class="cb" src="img/aliens-1.webp" alt="Familia de extraterrestres verdes impresos en 3D, pedido especial para un local comercial" loading="lazy" decoding="async"></div>
+      <p style="color:#cfc8b8;font-size:.92rem">Pedido especial para un local comercial: una familia de figuras en distintos tamaños, impresa en 3D.</p>
     </div>
   </div>
 </section>
@@ -766,7 +778,7 @@ if(FINE&&!matchMedia("(forced-colors:active),(prefers-contrast:more)").matches){
 const cur=$("#cur"),curXY=$(".xy",cur);
 addEventListener("pointermove",e=>{st.mx=e.clientX;st.my=e.clientY;st.idle=0;
   if(FINE){cur.style.transform=`translate(${e.clientX}px,${e.clientY}px)`;curXY.textContent=`X ${String(Math.round(e.clientX)).padStart(4,"0")} Y ${String(Math.round(e.clientY)).padStart(4,"0")}`;
-    const mc=!!e.target.closest(".machine");cur.classList.add("on");cur.classList.toggle("lens",mc);cur.classList.toggle("link",!mc&&!!e.target.closest("a,button,[role=button],input,textarea,select"))}
+    const mc=!!e.target.closest(".machine");cur.classList.add("on");cur.classList.toggle("lens",mc);cur.classList.toggle("link",!mc&&!!e.target.closest("a,button,[role=button],input,textarea,select,.card,.piece"))}
 },{passive:true});
 addEventListener("mouseout",e=>{if(!e.relatedTarget)cur.classList.remove("on")});
 
@@ -882,8 +894,8 @@ const SV=[
  ["Merch de diseño","Objetos corporativos con identidad.","Piezas pensadas para que tu marca se toque. Nada del típico llavero promocional.","M8 10H28V30H8ZM13 10V6H23V10M14 18H22"],
  ["Cartelería corpórea","Letras con volumen, con o sin luz.","Nombres y logos en relieve, iluminados o no, para locales, mesas y eventos.","M7 28L14 8H18L25 28M10 21H22M18 8L21 6L28 26L25 28M4 31H32M29 5L32 2M31 10H34"],
  ["Objetos para eventos","Souvenirs, piezas de mesa, números.","Carteles para torta, números decorativos, souvenirs personalizados con color, nombre y medida a elección.","M18 5V10M10 8L13 12M26 8L23 12M8 18H28V30H8ZM8 24H28"]];
-$("#cards").innerHTML=SV.map((s,i)=>`<button class="card neu rv" style="--d:${i*.07}s" aria-expanded="false"><svg class="ic" viewBox="0 0 36 36" aria-hidden="true"><path d="${s[3]}"/></svg><span class="n">0${i+1}</span><h3>${s[0]}</h3><p>${s[1]}</p><div class="more"><div><p>${s[2]}</p></div></div></button>`).join("");
-$$(".card").forEach(c=>c.addEventListener("click",()=>{const o=c.classList.toggle("open");c.setAttribute("aria-expanded",o)}));
+$("#cards").innerHTML=SV.map((s,i)=>`<article class="card neu rv" style="--d:${i*.07}s"><svg class="ic" viewBox="0 0 36 36" aria-hidden="true"><path d="${s[3]}"/></svg><span class="n">0${i+1}</span><h3>${s[0]}</h3><p>${s[1]}</p><button class="more-btn" aria-expanded="false" aria-controls="sv${i}" aria-label="Ver detalle de ${s[0].replace("&shy;","")}"><i aria-hidden="true">+</i>Ver detalle</button><div class="more" id="sv${i}"><div><p>${s[2]}</p></div></div></article>`).join("");
+$$(".card").forEach(c=>c.addEventListener("click",()=>{const o=c.classList.toggle("open");c.querySelector(".more-btn").setAttribute("aria-expanded",o)}));
 
 /* ============ PM: costo por unidad ============ */
 const qty=$("#qty"),cost=$("#cost");
@@ -899,7 +911,7 @@ const PIECES=[
   [`<circle cx="50" cy="40" r="26"/><path d="M50 14a13 13 0 0 1 0 26a13 13 0 0 0 0 26"/><circle class="oc" cx="50" cy="27" r="3"/><circle cx="50" cy="53" r="3"/>`,`<path d="M24 78H76M30 78V90H70V78"/>`]],
  ["EA-003","Posavasos de diseño","Modelos propios o personalizados con forma, colores, logo y soporte a medida.",["Hogar","Marcas"],"PLA / PETG","Impresión 3D","forma · color · logo · soporte",
   [`<ellipse cx="50" cy="38" rx="30" ry="9"/><ellipse cx="50" cy="47" rx="30" ry="9"/><ellipse cx="50" cy="56" rx="30" ry="9"/>`,`<path d="M24 70H76L70 90H30Z"/>`]],
- ["EA-004","Aliens","Pedido especial para un local comercial.",["Marcas"],"PLA","Impresión 3D","tamaño · color · logo",
+ ["EA-004","Extraterrestres","Pedido especial para un local comercial.",["Marcas"],"PLA","Impresión 3D","tamaño · color · logo",
   [`<path d="M50 14C74 14 82 36 72 54C66 64 58 70 50 70S34 64 28 54C18 36 26 14 50 14Z"/><path class="oc" d="M32 40C40 42 44 46 44 50C36 50 30 46 32 40ZM68 40C60 42 56 46 56 50C64 50 70 46 68 40Z"/><path d="M42 60H58M50 70V86"/>`]],
  ["EA-005","Halloween","Calaveras y personajes estacionales a pedido.",["Eventos","Hogar"],"PLA","Impresión 3D","personaje · tamaño · color",
   [`<path d="M26 50a24 24 0 1 1 48 0V62H62V72H38V62H26Z"/><circle class="oc" cx="40" cy="48" r="6"/><circle class="oc" cx="60" cy="48" r="6"/><path d="M50 56l-3 6h6ZM44 72V64M50 72V64M56 72V64"/>`]],
@@ -929,33 +941,38 @@ const PIECES=[
   [`<rect x="18" y="42" width="56" height="26" rx="12"/><path d="M58 42V30H74V42"/><circle class="oc" cx="34" cy="55" r="4"/><circle cx="82" cy="28" r="8"/><path d="M74 34L68 40"/>`]],
  ["EA-018","Manos inquietas","Estrella espiral y cubo infinito: piezas articuladas para tener en la mano.",["Juego"],"PLA","Impresión 3D articulada","color · tamaño",
   [`<path d="M50 18L58 42L82 50L58 58L50 82L42 58L18 50L42 42Z"/><circle class="oc" cx="50" cy="50" r="7"/>`]]];
+// PLACEHOLDER fotos reales futuras: posavasos, halloween, jirafa y manos usan placas de Instagram con texto como portada. Reemplazar <slug>-1.webp por una foto limpia 4:5 de un solo objeto, mover la placa al final de la galería (renombrar a <slug>-N.webp y subir PH[slug]).
 const PH={articulados:1,equilibrio:1,posavasos:2,aliens:1,halloween:2,jirafa:1,colectivo:1,autito:3,numeros:3,maceta2:1,acanalada:1,espiral:1,portalapices:2,corazon:4,nina:7,numcalado:3,silbato:4,manos:1};
 const SLUG=["articulados","equilibrio","posavasos","aliens","halloween","jirafa","colectivo","autito","numeros","maceta2","acanalada","espiral","portalapices","corazon","nina","numcalado","silbato","manos"];
+const shy=s=>s.replace("Extraterrestres","Extra&shy;terrestres");
 const img=(i,k)=>`img/${SLUG[i]}-${k}.webp`;
+const CROP=new Set(["articulados","equilibrio","aliens","colectivo"]);
+const ALT={"posavasos-1":"Posavasos de diseño, algunas opciones para elegir: Flor de loto, Hoja de monstera y Set de cóctel","posavasos-2":"Posavasos de diseño personalizables: Pesas de gym, Discos de vinilo y uno con la leyenda Tu idea. Formas, colores, nombres o logos"};
+const alt=(i,k,d)=>ALT[`${SLUG[i]}-${k}`]||d;
 const CATS=["Todo","Hogar","Juego","Eventos","Marcas","Luz"];
 const mkSvg=(p,ex)=>`<svg viewBox="0 0 100 100" class="gsv" aria-hidden="true">${p[0]?`<g class="pb ${ex?'p-ex-a':''}">${p[0]}</g>`:""}${p[1]?`<g class="pb ${ex?'p-ex-b':''}">${p[1]}</g>`:""}</svg>`;
-$("#pieces").innerHTML=PIECES.map((p,i)=>`<button class="piece neu rv" data-i="${i}" style="--d:${(i%6)*.06}s" data-cat="${p[3].join(" ")}"><div class="ph"><img src="${img(i,1)}" alt="${p[1]}: ${p[2]}" loading="lazy" decoding="async" data-i="${i}"></div>${PH[SLUG[i]]>1?`<span class="nph">${PH[SLUG[i]]} fotos</span>`:""}<span class="code">${p[0]}</span><h3>${p[1]}</h3><p>${p[2]}</p></button>`).join("");
+$("#pieces").innerHTML=PIECES.map((p,i)=>`<article class="piece neu rv" data-i="${i}" style="--d:${(i%6)*.06}s" data-cat="${p[3].join(" ")}"><div class="ph"><img${CROP.has(SLUG[i])?' class="cb"':""} src="${img(i,1)}" alt="${alt(i,1,"")}" loading="lazy" decoding="async" data-i="${i}"></div>${PH[SLUG[i]]>1?`<span class="nph">${PH[SLUG[i]]} fotos</span>`:""}<span class="code">${p[0]}</span><h3><button class="open-p" aria-haspopup="dialog">${shy(p[1])}</button></h3><p>${p[2]}</p></article>`).join("");
 $("#pieces").addEventListener("error",e=>{const t=e.target;if(t.tagName!=="IMG")return;const w=t.closest(".ph");if(w){w.outerHTML=mkSvg(PIECES[+t.dataset.i][7],false)}},true);
 $("#filters").innerHTML=CATS.map((c,i)=>`<button class="btn ${i?"":"on"}" data-c="${c}" aria-pressed="${!i}">${c}</button>`).join("");
+const fcount=n=>$("#fcount").textContent=n+(n===1?" pieza":" piezas");fcount(PIECES.length);
 $("#filters").addEventListener("click",e=>{const b=e.target.closest("[data-c]");if(!b)return;
   $$("#filters .btn").forEach(x=>{x.classList.toggle("on",x===b);x.setAttribute("aria-pressed",x===b)});
-  $$(".piece").forEach(p=>p.classList.toggle("hide",b.dataset.c!=="Todo"&&!p.dataset.cat.split(" ").includes(b.dataset.c)))});
+  $$(".piece").forEach(p=>p.classList.toggle("hide",b.dataset.c!=="Todo"&&!p.dataset.cat.split(" ").includes(b.dataset.c)));fcount($$(".piece:not(.hide)").length)});
 const modal=$("#modal"),mbox=$("#mbox");let lastFocus;
 function openPiece(i){const p=PIECES[i],ex=!!p[8],n=PH[SLUG[i]];lastFocus=document.activeElement;
   mbox.innerHTML=`<button class="btn mx" id="mclose" aria-label="Cerrar">Cerrar ✕</button>
-  <div><div class="mview" id="mview"><img id="mimg" src="${img(i,1)}" alt="${p[1]}">${mkSvg(p[7],ex)}</div>
+  <div><div class="mview" id="mview"><img id="mimg" src="${img(i,1)}" alt="${alt(i,1,p[1])}">${mkSvg(p[7],ex)}</div>
   <div class="thumbs" role="group" aria-label="Fotos y plano">${Array.from({length:n},(_,k)=>`<button class="th ${k?"":"on"}" data-k="${k+1}" aria-label="Foto ${k+1}"><img src="${img(i,k+1)}" alt=""></button>`).join("")}<button class="th" data-k="plan" aria-label="Ver plano lineal">PLANO</button></div></div>
-  <div><span class="eyebrow">${p[0]}</span><h3 id="mt">${p[1]}</h3><p style="color:#cfc8b8">${p[2]}</p>
-  <dl class="spec"><dt>Material</dt><dd>${p[4]}</dd><dt>Proceso</dt><dd>${p[5]}</dd><dt>Categoría</dt><dd>${p[3].join(" · ")}</dd></dl>
-  <div class="vars">${p[6].split(" · ").map(v=>`<span>${v}</span>`).join("")}</div>
-  <div style="display:flex;gap:.8rem;flex-wrap:wrap">${ex?`<button class="btn" id="mex" aria-pressed="false">Vista explosionada</button>`:""}<button class="btn" id="mrot">Pausar giro</button><a class="btn pri" href="#contacto" id="mask">Pedir esta pieza</a></div></div>`;
-  modal.classList.add("open");document.body.style.overflow="hidden";$("#mclose").focus();
-  $("#mclose").onclick=closeM;$("#mask").onclick=()=>{closeM();$("select[name=t]").selectedIndex=0;$("textarea[name=m]").value=`Me interesa: ${p[1]} (${p[0]}).`};
+  <div><span class="eyebrow">${p[0]}</span><h3 id="mt">${shy(p[1])}</h3><p style="color:#cfc8b8">${p[2]}</p>
+  <dl class="spec"><dt>Material</dt><dd>${p[4]}</dd><dt>Proceso</dt><dd>${p[5]}</dd><dt>Categoría</dt><dd>${p[3].join(" · ")}</dd><dt>A elección</dt><dd class="vars" style="margin:0">${p[6].split(" · ").map(v=>`<span>${v}</span>`).join("")}</dd></dl>
+  <div style="display:flex;gap:.8rem;flex-wrap:wrap">${ex?`<button class="btn" id="mex" aria-pressed="false">Vista explosionada</button>`:""}<button class="btn" id="mrot" hidden>Pausar giro</button><a class="btn pri" href="#contacto" id="mask">Pedir esta pieza</a></div></div>`;
+  modal.classList.add("open");mbox.scrollTop=0;document.body.style.overflow="hidden";$("#mclose").focus();
+  $("#mclose").onclick=closeM;$("#mask").onclick=()=>{closeM();const m=$("textarea[name=m]"),l=`Me interesa: ${p[1]} (${p[0]}).`;if(!m.value.includes(p[0]))m.value=m.value.trim()?l+"\n"+m.value.trim():l;say(`«${p[1]}» quedó en tu mensaje.`)};
   const mv=$("#mview"),mi=$("#mimg");
-  mi.onerror=()=>{mv.classList.add("plan");$$(".th",mbox).forEach(t=>t.classList.toggle("on",t.dataset.k==="plan"))};
-  const show=k=>{mv.classList.toggle("plan",k==="plan");if(k!=="plan")mi.src=img(i,k);$$(".th",mbox).forEach(t=>t.classList.toggle("on",t.dataset.k===String(k)))};
+  const show=k=>{mv.classList.toggle("plan",k==="plan");$("#mrot",mbox).hidden=k!=="plan"||RM||QT;if(k!=="plan"){mi.src=img(i,k);mi.alt=alt(i,k,p[1])}$$(".th",mbox).forEach(t=>t.classList.toggle("on",t.dataset.k===String(k)))};
+  mi.onerror=()=>show("plan");
   $(".thumbs",mbox).addEventListener("click",e=>{const t=e.target.closest(".th");t&&show(t.dataset.k)});
-  $("#mrot").onclick=e=>{show("plan");const s=mv.classList.toggle("stop");e.target.textContent=s?"Girar":"Pausar giro"};
+  $("#mrot").onclick=e=>{const s=mv.classList.toggle("stop");e.target.textContent=s?"Reanudar giro":"Pausar giro"};
   if(ex)$("#mex").onclick=e=>{show("plan");const o=mv.classList.toggle("ex");e.target.setAttribute("aria-pressed",o)}}
 function closeM(){modal.classList.remove("open");document.body.style.overflow="";lastFocus&&lastFocus.focus()}
 $("#pieces").addEventListener("click",e=>{const b=e.target.closest(".piece");b&&openPiece(+b.dataset.i)});
